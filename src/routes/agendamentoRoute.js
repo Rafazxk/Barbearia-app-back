@@ -1,11 +1,9 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const agendamentoController = require('../controllers/agendamentoController');
 
-const controller = require('../controllers/agendamentoController')
+router.get('/', agendamentoController.getTodos);
+router.post('/', agendamentoController.criarAgendamento);
+router.delete('/:id', agendamentoController.excluirAgendamento);
 
-router.get('/', controller.getTodos);
-router.post('/', controller.criar);
-router.put('/:id', controller.atualizar);   
-router.delete('/:id', controller.deletar);
-
-module.exports = router
+module.exports = router;

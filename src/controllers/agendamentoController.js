@@ -1,46 +1,45 @@
-const db = require('../db');
+const { lerAgendamentos, salvarAgendamentos } = require('../dbFake');
 
-// Lista todos os agendamentos
+// GET /api/agendamentos
 exports.getTodos = (req, res) => {
-  const agendamentos = db.prepare('SELECT * FROM agendamentos').all();
+  const agendamentos = lerAgendamentos();
   res.json(agendamentos);
 };
 
-// Cria um novo agendamento
-exports.criar = (req, res) => {
-  const { nome, telefone, data, hora, barbeiro } = req.body;
+// POST /api/agendamentos
+exports.criarAgendamento = (req, res) => {
+  const { nome, telefone, data, hora, barbeiro, servico } = req.body;
+  if (!nome || !telefone || !data || !hora || !barbeiro || !servico) {
+    return res.status(400).json({ error: 'Campos obrigatórios ausentes' });
+  }
 
-  const stmt = db.prepare(`
-    INSERT INTO agendamentos (nome, telefone, data, hora, barbeiro)
-    VALUES (?, ?, ?, ?, ?)
-  `);
+  const novoAgendamento = {
+    id: Date.now(),
+    nome,
+    telefone,
+    data,
+    hora,
+    barbeiro,
+    servico,
+  };
 
-  const info = stmt.run(nome, telefone, data, hora, barbeiro);
+  const agendamentos = lerAgendamentos();
+  agendamentos.push(novoAgendamento);
+  salvarAgendamentos(agendamentos);
 
-  res.status(201).json({ id: info.lastInsertRowid, nome, telefone, data, hora, barbeiro });
+  res.status(201).json(novoAgendamento);
 };
 
-// Atualiza um agendamento
-exports.atualizar = (req, res) => {
-  const { id } = req.params;
-  const { nome, telefone, data, hora, barbeiro } = req.body;
+// DELETE /api/agendamentos/:id
+exports.excluirAgendamento = (req, res) => {
+  const id = Number(req.params.id);
+  const agendamentos = lerAgendamentos();
+  const filtrados = agendamentos.filter(ag => ag.id !== id);
 
-  const stmt = db.prepare(`
-    UPDATE agendamentos
-    SET nome = ?, telefone = ?, data = ?, hora = ?, barbeiro = ?
-    WHERE id = ?
-  `);
+  if (agendamentos.length === filtrados.length) {
+    return res.status(404).json({ error: 'Agendamento não encontrado' });
+  }
 
-  stmt.run(nome, telefone, data, hora, barbeiro, id);
-
-  res.json({ id, nome, telefone, data, hora, barbeiro });
-};
-
-// Deleta um agendamento
-exports.deletar = (req, res) => {
-  const { id } = req.params;
-
-  db.prepare('DELETE FROM agendamentos WHERE id = ?').run(id);
-
-  res.status(204).send();
+  salvarAgendamentos(filtrados);
+  res.status(200).json({ success: true });
 };

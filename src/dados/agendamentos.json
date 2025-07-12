@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1752175233817,
+    "nome": "rafa",
+    "telefone": "81981992775",
+    "data": "2025-07-15",
+    "hora": "11:00",
+    "barbeiro": "1",
+    "servico": "barba"
+  },
+  {
+    "id": 1752175298425,
+    "nome": "loius",
+    "telefone": "321321312213",
+    "data": "2025-07-22",
+    "hora": "09:00",
+    "barbeiro": "3",
+    "servico": "corte"
+  },
+  {
+    "id": 1752280616052,
+    "nome": "lolorafalo",
+    "telefone": "213213123",
+    "data": "2025-07-14",
+    "hora": "10:00",
+    "barbeiro": "2",
+    "servico": "corte"
+  }
+]
