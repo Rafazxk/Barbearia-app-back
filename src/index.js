@@ -11,3 +11,7 @@ app.use('/api/agendamentos', agendamentoRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+
+app.get('/', (req, res) => {
+  res.send('API da Barbearia está funcionando! 💈');
+});
